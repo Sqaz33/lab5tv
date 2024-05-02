@@ -92,8 +92,8 @@ class Calculator:
         """
         return list(sorted(set(data)))
 
-    def solveB2(self):
-        pass
+    def solveB2(self, data: list[float], intervals_number: int):
+        raise "234"
 
     def solveC1(self, data: list[float]) -> tuple[PrettyTable, PrettyTable]:
         """
@@ -211,12 +211,13 @@ class Calculator:
 
 
 if __name__ == "__main__":
-    calc = Calculator()
-    data = [1, 4, 4, 6, 6, 16]
+    # calc = Calculator()
+    # data = []
 
-    # Отображение графика
-    ans = calc.solveD1(data)
-    print(ans[0])
-    for s in ans[1]:
-        print(s)
-    plt.show()
+    # # Отображение графика
+    # ans = calc.solveD1(data)
+    # print(ans[0])
+    # for s in ans[1]:
+    #     print(s)
+    # plt.show()
+    Calculator().solveB2([], 123)
