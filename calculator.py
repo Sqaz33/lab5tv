@@ -97,17 +97,8 @@ class Calculator:
         intervals += [(X[-1], X[-1] + 10)]
         
         # построение графика
-        Fx_for_plot = []
-        for i in Fx:
-            Fx_for_plot.append(i)
-            Fx_for_plot.append(i) 
-        intervals_for_plot = []
-        for i in intervals:
-            intervals_for_plot.append(i[0])
-            intervals_for_plot.append(i[1]) 
-        # plt.plot(intervals_for_plot, Fx_for_plot)
-        plt.xlim(X[0], X[-1]*1.3)
-        plt.ylim(0, 1.5)
+        plt.xlim(intervals[0][0], intervals[-1][1])
+        plt.ylim(0, 1.1)
         plt.title("Империческая функция распределения")
             # добавление стрелок     (xy)<------------(xytext)
         for i in range(len(Fx)):
