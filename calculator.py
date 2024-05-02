@@ -91,7 +91,7 @@ class Calculator:
         Fx = [0] + [p := p + i for i in P]
 
         # получение интервалов, для значения ф-ции распр.
-        intervals = [(X[0] - 10, X[0])]
+        intervals = [(X[0]-10, X[0])]
         for i in range(0, len(X) - 1):
             intervals.append((X[i], X[i+1]))
         intervals += [(X[-1], X[-1] + 10)]
@@ -105,7 +105,10 @@ class Calculator:
         for i in intervals:
             intervals_for_plot.append(i[0])
             intervals_for_plot.append(i[1]) 
-        plt.plot(intervals_for_plot, Fx_for_plot)
+        # plt.plot(intervals_for_plot, Fx_for_plot)
+        plt.xlim(X[0], X[-1]*1.3)
+        plt.ylim(0, 1.5)
+        plt.title("Империческая функция распределения")
             # добавление стрелок     (xy)<------------(xytext)
         for i in range(len(Fx)):
             plt.annotate(
@@ -149,7 +152,10 @@ if __name__ == "__main__":
     # plt.ylim(0, 1)
 
     # Отображение графика
-    calc.solveD1(data)
+    ans = calc.solveD1(data)
+    print(ans[0])
+    for s in ans[1]:
+        print(s)
     plt.show()
 
 
