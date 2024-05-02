@@ -4,6 +4,11 @@ from prettytable import PrettyTable
 class Calculator:
 
     def get_frequencies(self, data: list[float]) -> list[int]:
+        """
+        Получить частоты
+        :param data: статистические данные
+        :return: частоты
+        """
         count = dict()
         for i in data:
             count[i] = count.get(i, 0) + 1
@@ -13,15 +18,31 @@ class Calculator:
         return freq
 
     def get_relative_frequencies(self, data: list[float]) -> list[float]:
+        """
+        Получить относительные частоты
+        :param data: статистические данные
+        :return: относительные частоты
+        """
         freq = self.get_frequencies(data)
         return [i / sum(freq) for i in freq]
 
     def solveB1(self, data: list[float]) -> list[float]:
-
+        """
+        Решить задачу B1:
+        составить вариационный ряд
+        :param data: статистические данные
+        :return: вариацонный ряд
+        """
         return list(sorted(set(data)))
 
     def solveC1(self, data: list[float]) -> tuple[PrettyTable, PrettyTable]:
-
+        """
+        Решить задачу С1:
+        составить статистический ряд частот и ряд отностительных частот;
+        построить график для каждого ряда
+        :param data: статистические данные
+        :return: статистические ряды, (неявно возвращается график plt.show())
+        """
         freq = self.get_frequencies(data)
         relative_freq = self.get_relative_frequencies(data)
 
@@ -49,6 +70,15 @@ class Calculator:
 
     # def solveC2(self, data: list[float]) -> tuple(list[float], list[float], graph):
     def solveD1(self, data: list[float]) -> tuple[str, list[str]]:
+        """
+        Решить задачу D1:
+        Дать определение функции распределения;
+        Найти функцию распрееделения;
+        Построить график для функции.
+        :param data: статистические данные
+        :return: определение фукнции, функцию распределения, (неявно возвращается график plt.show())
+        """
+
         func_definition = ("Эмпирической функцией распредления называют функцию F*(x), определяющую для каждого значения x "
                            "относительну частоту события X < x: F*(x) = n_x/n")
 
@@ -80,5 +110,6 @@ if __name__ == "__main__":
     # print(ans[0])
     # for s in ans[1]:
     #     print(s)
+    calc.solveC1()
 
 
