@@ -18,6 +18,7 @@ class Calculator:
         self._unbiased_assessment = """
         S = n/(n - 1) * D_в        
         """
+
     # ------------математичесие методы---------------
     def get_frequencies(self, data: list[float]) -> list[int]:
         """
@@ -41,19 +42,43 @@ class Calculator:
         """
         freq = self.get_frequencies(data)
         return [i / sum(freq) for i in freq]
-    
+
     def sample_mean(self, variation_series: list[float], frequencies: list[int]) -> float:
-        return (1/sum(frequencies)) * sum(x * n for x, n in zip(variation_series, frequencies))
-    
+        """
+        Получить выборочное среднее
+        :param variation_series: вариационный ряд
+        :param frequencies: ряд частот
+        :return: выборочное среднее
+        """
+        return (1 / sum(frequencies)) * sum(x * n for x, n in zip(variation_series, frequencies))
+
     def dispersion(self, variation_series: list[float], frequencies: list[int]) -> float:
+        """
+        Получить дисперсию
+        :param variation_series: выриационный ряд
+        :param frequencies: ряд частот
+        :return: дисперсия
+        """
         x = self.sample_mean(variation_series, frequencies)
-        x_2 = self.sample_mean([i**2 for i in variation_series], frequencies)
-        return x_2 - x**2
-    
+        x_2 = self.sample_mean([i ** 2 for i in variation_series], frequencies)
+        return x_2 - x ** 2
+
     def standard_deviation(self, variation_series: list[float], frequencies: list[int]) -> float:
+        """
+        Получить квадратичное отклонение
+        :param variation_series: выриационный ряд
+        :param frequencies: ряд частот
+        :return: квадратичное отклоненение
+        """
         return self.dispersion(variation_series, frequencies) ** 0.5
-    
+
     def unbiased_assessment(self, variation_series: list[float], frequencies: list[int]) -> float:
+        """
+        Получить несмещенную оценку
+        :param variation_series: выриационный ряд
+        :param frequencies: ряд частот
+        :return: несмещенная оценка
+        """
         n = sum(frequencies)
         return n / (n - 1) * self.dispersion(variation_series, frequencies)
 
@@ -67,6 +92,9 @@ class Calculator:
         """
         return list(sorted(set(data)))
 
+    def solveB2(self):
+        pass
+
     def solveC1(self, data: list[float]) -> tuple[PrettyTable, PrettyTable]:
         """
         Решить задачу С1:
@@ -75,6 +103,7 @@ class Calculator:
         :param data: статистические данные
         :return: статистические ряды, (неявно возвращается график plt.show())
         """
+        # получение частот и вар. ряда
         freq = self.get_frequencies(data)
         relative_freq = self.get_relative_frequencies(data)
 
@@ -115,7 +144,8 @@ class Calculator:
 
         func_definition = (
             "Эмпирической функцией распредления называют функцию F*(x), определяющую для каждого значения x "
-            "относительну частоту события X < x: F*(x) = n_x/n")
+            "относительну частоту события X < x: F*(x) = n_x/n"
+        )
 
         # получение ф-ции распр.
         X = self.solveB1(data)
@@ -155,6 +185,14 @@ class Calculator:
         pass
 
     def solveE1(self, data: list[float]) -> tuple[str, float, str, float, str, float, str, float]:
+        """
+        Решить задачу E1:
+        Дать определение числовым характеристикам,
+        получить эти числовые характеристики
+        :param data: статистические данные
+        :return: определение числовых характеристик,
+        числовые характеристики
+        """
         X = self.solveB1(data)
         N = self.get_frequencies(data)
         return (
