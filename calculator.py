@@ -3,7 +3,22 @@ from prettytable import PrettyTable
 
 
 class Calculator:
-    # ------------математические методы---------------
+    def __init__(self):
+        self._sample_mean = """ 
+        ___
+        x_в = n^(-1) * sum(x_i * n_i) 
+        """
+        self._dispersion = """
+              _____    ___
+        D_в = x^2_в - (x_в)^2 
+        """
+        self._standard_deviation = """
+        b = (D_в)^(0.5)
+        """
+        self._unbiased_assessment = """
+        S = n/(n - 1) * D_в        
+        """
+    # ------------математичесие методы---------------
     def get_frequencies(self, data: list[float]) -> list[int]:
         """
         Получить частоты
@@ -26,6 +41,21 @@ class Calculator:
         """
         freq = self.get_frequencies(data)
         return [i / sum(freq) for i in freq]
+    
+    def sample_mean(self, variation_series: list[float], frequencies: list[int]) -> float:
+        return (1/sum(frequencies)) * sum(x * n for x, n in zip(variation_series, frequencies))
+    
+    def dispersion(self, variation_series: list[float], frequencies: list[int]) -> float:
+        x = self.sample_mean(variation_series, frequencies)
+        x_2 = self.sample_mean([i**2 for i in variation_series], frequencies)
+        return x_2 - x**2
+    
+    def standard_deviation(self, variation_series: list[float], frequencies: list[int]) -> float:
+        return self.dispersion(variation_series, frequencies) ** 0.5
+    
+    def unbiased_assessment(self, variation_series: list[float], frequencies: list[int]) -> float:
+        n = sum(frequencies)
+        return n / (n - 1) * self.dispersion(variation_series, frequencies)
 
     # -------------решения задач-------------------------
     def solveB1(self, data: list[float]) -> list[float]:
@@ -109,8 +139,9 @@ class Calculator:
                 '', xy=(intervals[i][0], Fx[i]), xytext=(intervals[i][1], Fx[i]),
                 arrowprops=dict(width=0.01, headwidth=5)
             )
-        for i in range(len(Fx)-1):
-            plt.plot([intervals[i][1], intervals[i][1]], [Fx[i], Fx[i+1]], linestyle='--')
+            # добавление пунктира
+        for i in range(len(Fx) - 1):
+            plt.plot([intervals[i][1], intervals[i][1]], [Fx[i], Fx[i + 1]], linestyle="--", color="black")
 
         # получаем строковое представленние функции
         str_intervals = ([f'x <= {X[0]}']
@@ -123,8 +154,19 @@ class Calculator:
     def solveD2(self):
         pass
 
-    def solveE1(self):
-        pass
+    def solveE1(self, data: list[float]) -> tuple[str, float, str, float, str, float, str, float]:
+        X = self.solveB1(data)
+        N = self.get_frequencies(data)
+        return (
+            self._sample_mean,
+            self.sample_mean(X, N),
+            self._dispersion,
+            self.dispersion(X, N),
+            self._standard_deviation,
+            self.standard_deviation(X, N),
+            self._unbiased_assessment,
+            self.unbiased_assessment(X, N)
+        )
 
     def solveE2(self):
         pass
@@ -133,22 +175,6 @@ class Calculator:
 if __name__ == "__main__":
     calc = Calculator()
     data = [1, 4, 4, 6, 6, 16]
-    # print(calc.solveC1(data))
-    # ans = calc.solveD1(data)
-    # print(ans[0])
-    # for s in ans[1]:
-    #     print(s)
-
-    # # Отображение точки данных
-    # plt.scatter(0.5, 0.5)
-
-    # # Добавление аннотации с текстом и стрелкой
-    # plt.annotate('', xy=(0.8, 0.5), xytext=(0.6, 0.6),
-    #             arrowprops=dict(width=0.01, headwidth=5))
-
-    # # Настройка границ графика
-    # plt.xlim(0, 1)
-    # plt.ylim(0, 1)
 
     # Отображение графика
     ans = calc.solveD1(data)
