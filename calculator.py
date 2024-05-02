@@ -3,7 +3,7 @@ from prettytable import PrettyTable
 
 
 class Calculator:
-    #------------математические методы---------------
+    # ------------математические методы---------------
     def get_frequencies(self, data: list[float]) -> list[int]:
         """
         Получить частоты
@@ -27,7 +27,7 @@ class Calculator:
         freq = self.get_frequencies(data)
         return [i / sum(freq) for i in freq]
 
-    #-------------решения задач-------------------------
+    # -------------решения задач-------------------------
     def solveB1(self, data: list[float]) -> list[float]:
         """
         Решить задачу B1:
@@ -70,7 +70,9 @@ class Calculator:
 
         return freq_table, relative_freq_table
 
-    # def solveC2(self, data: list[float]) -> tuple(list[float], list[float], graph):
+    def solveC2(self, data: list[float]) -> tuple[list[float], list[float]]:
+        pass
+
     def solveD1(self, data: list[float]) -> tuple[str, list[str]]:
         """
         Решить задачу D1:
@@ -81,8 +83,9 @@ class Calculator:
         :return: определение фукнции, функцию распределения, (неявно возвращается график plt.show())
         """
 
-        func_definition = ("Эмпирической функцией распредления называют функцию F*(x), определяющую для каждого значения x "
-                           "относительну частоту события X < x: F*(x) = n_x/n")
+        func_definition = (
+            "Эмпирической функцией распредления называют функцию F*(x), определяющую для каждого значения x "
+            "относительну частоту события X < x: F*(x) = n_x/n")
 
         # получение ф-ции распр.
         X = self.solveB1(data)
@@ -91,33 +94,40 @@ class Calculator:
         Fx = [0] + [p := p + i for i in P]
 
         # получение интервалов, для значения ф-ции распр.
-        intervals = [(X[0]-10, X[0])]
+        intervals = [(X[0] - 1, X[0])]
         for i in range(0, len(X) - 1):
-            intervals.append((X[i], X[i+1]))
-        intervals += [(X[-1], X[-1] + 10)]
-        
+            intervals.append((X[i], X[i + 1]))
+        intervals += [(X[-1], X[-1] + 1)]
+
         # построение графика
         plt.xlim(intervals[0][0], intervals[-1][1])
         plt.ylim(0, 1.1)
         plt.title("Империческая функция распределения")
-            # добавление стрелок     (xy)<------------(xytext)
+        # добавление стрелок     (xy)<------------(xytext)
         for i in range(len(Fx)):
             plt.annotate(
                 '', xy=(intervals[i][0], Fx[i]), xytext=(intervals[i][1], Fx[i]),
                 arrowprops=dict(width=0.01, headwidth=5)
-                )
-        
+            )
+        for i in range(len(Fx)-1):
+            plt.plot([intervals[i][1], intervals[i][1]], [Fx[i], Fx[i+1]], linestyle='--')
+
         # получаем строковое представленние функции
-        str_intervals = ([f'x <= {X[0]}'] 
-                         + [f'{i[0]} < x <= {i[1]}' for i in intervals[1:len(intervals)-1]]
+        str_intervals = ([f'x <= {X[0]}']
+                         + [f'{i[0]} < x <= {i[1]}' for i in intervals[1:len(intervals) - 1]]
                          + [f'x > {X[-1]}'])
         str_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip([f'{p:0.3f}' for p in Fx], str_intervals)]
 
         return func_definition, str_Fx
 
-    # def solveD2:
-    # def solveE1::
-    # def solveE2:
+    def solveD2(self):
+        pass
+
+    def solveE1(self):
+        pass
+
+    def solveE2(self):
+        pass
 
 
 if __name__ == "__main__":
@@ -128,8 +138,6 @@ if __name__ == "__main__":
     # print(ans[0])
     # for s in ans[1]:
     #     print(s)
-
-
 
     # # Отображение точки данных
     # plt.scatter(0.5, 0.5)
@@ -148,6 +156,3 @@ if __name__ == "__main__":
     for s in ans[1]:
         print(s)
     plt.show()
-
-
-
