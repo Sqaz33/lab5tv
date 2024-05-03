@@ -8,6 +8,7 @@ class Generator:
         быть не менее 10 и не более 20 (числа могут быть как одного, так и разных
         знаков).
     """
+
     @staticmethod
     def generate_list_of_number(
             amount_of_numbers: int,
@@ -15,6 +16,7 @@ class Generator:
             freq: tuple[int, int]
     ) -> list[...]:
         # составить вар. ряд с частотами
+        # оч медленное решение ------------------
         rands = dict()
         sum_freq = 0
         while sum_freq < amount_of_numbers:
@@ -23,9 +25,9 @@ class Generator:
             if rands.get(rand_val, "not") == "not":
                 rands[rand_val] = rand_freq
                 sum_freq += rand_freq
+        #------------------------------------------
 
         # подбить сумму частот до треб. кол. чисел
-        # оч медленное решение ------------------
         while sum_freq != amount_of_numbers:
             for n in rands.keys():
                 if sum_freq == amount_of_numbers:
@@ -33,7 +35,6 @@ class Generator:
                 if rands[n] >= freq[0] + 1:
                     rands[n] -= 1
                     sum_freq -= 1
-        # ---------------------------------------
 
         # составить список случайных чисел
         stats = []
@@ -42,3 +43,7 @@ class Generator:
         random.shuffle(stats)
 
         return stats
+
+
+if __name__ == "__main__":
+    Generator.generate_list_of_number(100, (-10, 10), (10, 20))
