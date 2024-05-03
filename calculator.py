@@ -314,7 +314,7 @@ class Calculator:
         """
         Решить задачу D2:
         Дать определение функции распределения;
-        Найти функции распрееделений
+        Найти функции распределений
         для интервального и группированного рядов;
         Построить график для функциий.
         :param data: статистические данные
@@ -362,17 +362,18 @@ class Calculator:
             )
 
 
-        # получаем строковое представленние функции для инт. рядов\
+        # получаем строковое представленние функции для инт. ряда
         Fx = map(lambda s: f'{str(s):0.3f}', Fx)
         str_interv = ([f'x <= {intervals[0]:0.3f}']
                       + [f'x ∈ ({i[0]}, {i[1]}]' for i in intervals]
                       + [f'x > {intervals[1]:0.3f}'])
         str_Fx_interv = [f'если {i} то F*(x) = {p}' for p, i in zip(Fx, str_interv)]
 
+        # получаем строковое представленние функции для груп. ряда
         str_mid_intervals = ([f'x <= {mid_by_inter[0]}']
                             + [f'{i[0]} < x <= {i[1]}' for i in mid_by_inter[1:-2]]
                             + [f'x > {mid_by_inter[-1]}'])
-        str_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip([f'{p:0.3f}' for p in Fx], str_intervals)]
+        str_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip(Fx, str_mid_intervals)]
 
 
     def solveE2(self):
@@ -380,7 +381,6 @@ class Calculator:
 
 
 if __name__ == "__main__":
-    # data = [1, 1, 5, 3, 7, 1, 3]
-    # interval_number = 5
-
-    pass
+    data = [1, 1, 5, 3, 7, 1, 3]
+    interval_number = 5
+    Calculator().solveD2(data, interval_number)
