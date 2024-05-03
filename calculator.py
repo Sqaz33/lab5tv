@@ -109,6 +109,7 @@ class Calculator:
         for i in range(len(var)):
             if var[i] == intervals[-1][1]:
                 freq[-1] += var_freq[i]
+        # TODO: сделать проверку крайне правого значения
         return freq
 
     def get_intervals_relative_frequencies(self, data: list[float], interval_number: int) -> list[float]:

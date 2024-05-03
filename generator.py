@@ -16,7 +16,7 @@ class Generator:
             freq: tuple[int, int]
     ) -> list[...]:
         # составить вар. ряд с частотами
-        # оч медленное решение ------------------
+        # оч медленное решение при малом количестве вариантов------------------
         rands = dict()
         sum_freq = 0
         while sum_freq < amount_of_numbers:

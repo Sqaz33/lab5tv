@@ -49,11 +49,11 @@ def check_data(data: list[...]) -> bool:
     return True
 
 
-if __name__ == "__main__":
-    ## ошибка точности
-    data = [1, 2, 3, 4]  # test data
-    calc = Calculator()
-    calc.solveB2(data, 10)
+# if __name__ == "__main__":
+#     ## ошибка точности
+#     data = [1, 2, 3, 4]  # test data
+#     calc = Calculator()
+#     calc.solveB2(data, 10)
 
 if __name__ == "__main__":
     print("------------------------------------------\n"
