@@ -326,7 +326,7 @@ class Calculator:
         P = self.get_intervals_relative_frequencies(data, interval_number)
         intervals = self.get_intervals(data, interval_number)
         p = 0
-        Fx =  [0] + [p := p + i for i in P]
+        Fx = [0] + [p := p + i for i in P]
 
         # получение ф-ции распр. для интевального ряда
         mid = [(i[0] + i[1]) / 2 for i in intervals]
@@ -341,13 +341,13 @@ class Calculator:
         Fx_interv_graph.set_title("Функция распределения для интервального ряда")
 
             #построение графика ф-ции для группированного ряда
-        Fx_mid_graph.xlim(mid[0], mid[-1])
-        Fx_mid_graph.ylim(0, 1.1)
-        Fx_mid_graph.title("Функция распределения для групированного ряда")
         mid_by_inter = [(mid[0] - 1, mid[0])]
         for i in range(0, len(mid) - 1):
             mid_by_inter.append((mid[i], mid[i + 1]))
         mid_by_inter += [(mid[-1], mid[-1] + 1)]
+        Fx_mid_graph.set_xlim(mid_by_inter[0][0], mid_by_inter[-1][1])
+        Fx_mid_graph.set_ylim(0, 1.1)
+        Fx_mid_graph.set_title("Функция распределения для групированного ряда")
 
         # добавление стрелок     (xy)<------------(xytext)
         for i in range(len(Fx)):
@@ -361,20 +361,20 @@ class Calculator:
                 [mid_by_inter[i][1], mid_by_inter[i][1]], [Fx[i], Fx[i + 1]], linestyle="--", color="black"
             )
 
-
         # получаем строковое представленние функции для инт. ряда
-        Fx = map(lambda s: f'{str(s):0.3f}', Fx)
-        str_interv = ([f'x <= {intervals[0]:0.3f}']
+        Fx = list(map(lambda s: f'{s:0.3f}', Fx))
+        str_interv = ([f'x <= {intervals[0][0]:0.3f}']
                       + [f'x ∈ ({i[0]}, {i[1]}]' for i in intervals]
-                      + [f'x > {intervals[1]:0.3f}'])
+                      + [f'x > {intervals[-1][1]:0.3f}'])
         str_Fx_interv = [f'если {i} то F*(x) = {p}' for p, i in zip(Fx, str_interv)]
 
         # получаем строковое представленние функции для груп. ряда
-        str_mid_intervals = ([f'x <= {mid_by_inter[0]}']
-                            + [f'{i[0]} < x <= {i[1]}' for i in mid_by_inter[1:-2]]
-                            + [f'x > {mid_by_inter[-1]}'])
-        str_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip(Fx, str_mid_intervals)]
+        str_mid_intervals = ([f'x <= {mid_by_inter[0][0]}']
+                            + [f'{i[0]} < x <= {i[1]}' for i in mid_by_inter[1:-1]]
+                            + [f'x > {mid_by_inter[-1][1]}'])
+        str_Fx_mid = [f'если {xs} то F*(x) = {p}' for p, xs in zip(Fx, str_mid_intervals)]
 
+        return str_Fx_interv, str_Fx_mid
 
     def solveE2(self):
         pass
@@ -383,4 +383,11 @@ class Calculator:
 if __name__ == "__main__":
     data = [1, 1, 5, 3, 7, 1, 3]
     interval_number = 5
-    Calculator().solveD2(data, interval_number)
+    calc = Calculator()
+    ans = calc.solveD2(data, interval_number)
+    for j in ans:
+        print("------------------------")
+        for i in j:
+            print(i)
+
+    plt.show()
