@@ -215,7 +215,7 @@ class Calculator:
 
         # получаем строковое представленние функции
         str_intervals = ([f'x <= {X[0]}']
-                         + [f'{i[0]} < x <= {i[1]}' for i in intervals[1:len(intervals) - 1]]
+                         + [f'{i[0]} < x <= {i[1]}' for i in intervals[1:-2]]
                          + [f'x > {X[-1]}'])
         str_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip([f'{p:0.3f}' for p in Fx], str_intervals)]
 
@@ -273,7 +273,7 @@ class Calculator:
         table.add_column("Сумма частот интервала", freq)
         table.add_column("Сумма относительных частот интервала", [f'{i:0.3f}' for i in rel_freq])
 
-        # Построение гистрограмм
+        # Построение гистрограммы
         plt.hist(data, bins=interval_number, color='skyblue', edgecolor='black')
         plt.title("Гистограмма")
         return table
@@ -310,8 +310,70 @@ class Calculator:
 
         return table
 
-    def solveD2(self):
-        pass
+    def solveD2(self, data: list[float], interval_number: int) -> tuple[list[str], list[str]]:
+        """
+        Решить задачу D2:
+        Дать определение функции распределения;
+        Найти функции распрееделений
+        для интервального и группированного рядов;
+        Построить график для функциий.
+        :param data: статистические данные
+        :param interval_number: количество интервалов
+        :return: функции распределения
+        """
+
+        # получение ф-ции распр. для интевального ряда
+        P = self.get_intervals_relative_frequencies(data, interval_number)
+        intervals = self.get_intervals(data, interval_number)
+        p = 0
+        Fx =  [0] + [p := p + i for i in P]
+
+        # получение ф-ции распр. для интевального ряда
+        mid = [(i[0] + i[1]) / 2 for i in intervals]
+
+        # построение графиков
+        fig1, Fx_interv_graph = plt.subplots()
+        fig2, Fx_mid_graph = plt.subplots()
+
+            # построение графика ф-ции для инт. ряда
+        X_axis = [intervals[0][0]] + [i[1] for i in intervals]
+        Fx_interv_graph.plot(X_axis, Fx)
+        Fx_interv_graph.set_title("Функция распределения для интервального ряда")
+
+            #построение графика ф-ции для группированного ряда
+        Fx_mid_graph.xlim(mid[0], mid[-1])
+        Fx_mid_graph.ylim(0, 1.1)
+        Fx_mid_graph.title("Функция распределения для групированного ряда")
+        mid_by_inter = [(mid[0] - 1, mid[0])]
+        for i in range(0, len(mid) - 1):
+            mid_by_inter.append((mid[i], mid[i + 1]))
+        mid_by_inter += [(mid[-1], mid[-1] + 1)]
+
+        # добавление стрелок     (xy)<------------(xytext)
+        for i in range(len(Fx)):
+            Fx_mid_graph.annotate(
+                '', xy=(mid_by_inter[i][0], Fx[i]), xytext=(mid_by_inter[i][1], Fx[i]),
+                arrowprops=dict(width=0.01, headwidth=5)
+            )
+            # добавление пунктира
+        for i in range(len(Fx) - 1):
+            Fx_mid_graph.plot(
+                [mid_by_inter[i][1], mid_by_inter[i][1]], [Fx[i], Fx[i + 1]], linestyle="--", color="black"
+            )
+
+
+        # получаем строковое представленние функции для инт. рядов\
+        Fx = map(lambda s: f'{str(s):0.3f}', Fx)
+        str_interv = ([f'x <= {intervals[0]:0.3f}']
+                      + [f'x ∈ ({i[0]}, {i[1]}]' for i in intervals]
+                      + [f'x > {intervals[1]:0.3f}'])
+        str_Fx_interv = [f'если {i} то F*(x) = {p}' for p, i in zip(Fx, str_interv)]
+
+        str_mid_intervals = ([f'x <= {mid_by_inter[0]}']
+                            + [f'{i[0]} < x <= {i[1]}' for i in mid_by_inter[1:-2]]
+                            + [f'x > {mid_by_inter[-1]}'])
+        str_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip([f'{p:0.3f}' for p in Fx], str_intervals)]
+
 
     def solveE2(self):
         pass
@@ -320,15 +382,5 @@ class Calculator:
 if __name__ == "__main__":
     # data = [1, 1, 5, 3, 7, 1, 3]
     # interval_number = 5
-    # var = Calculator().solveB1(data)
-    # mx = max(var)
-    # mn = min(var)
-    # step = (mx - mn) / interval_number
-    # intervals = []
-    # x = mn
-    # while x + step <= mx:
-    #     intervals.append([x, x := x + step])
-    #
-    # if int(intervals[-1][1]) != int(mx):
-    #     intervals.append([x, x := x + step])
+
     pass
