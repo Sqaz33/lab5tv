@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
+from math import ceil
+
 
 class Calculator:
     def __init__(self):
@@ -91,8 +93,10 @@ class Calculator:
         x = mn
         while x + step <= mx:
             intervals.append([x, x := x + step])
+        if ceil(intervals[-1][1]) != ceil(mx):
+            intervals.append([x, x := x + step])
         return intervals
-    
+
     def get_intervals_frequencies(self, data: list[float], interval_number: int) -> list[int]:
         var = self.solveB1(data)
         var_freq = self.get_frequencies(data)
@@ -106,7 +110,7 @@ class Calculator:
             if var[i] == intervals[-1][1]:
                 freq[-1] += var_freq[i]
         return freq
-    
+
     def get_intervals_relative_frequencies(self, data: list[float], interval_number: int) -> list[float]:
         var = self.solveB1(data)
         var_rel_freq = self.get_relative_frequencies(data)
@@ -120,7 +124,7 @@ class Calculator:
             if var[i] == intervals[-1][1]:
                 rel_freq[-1] += var_rel_freq[i]
         return rel_freq
-    
+
     # -------------решения задания 1-------------------------
     def solveB1(self, data: list[float]) -> list[float]:
         """
@@ -206,7 +210,7 @@ class Calculator:
         for i in range(len(Fx) - 1):
             plt.plot(
                 [intervals[i][1], intervals[i][1]], [Fx[i], Fx[i + 1]], linestyle="--", color="black"
-                )
+            )
 
         # получаем строковое представленние функции
         str_intervals = ([f'x <= {X[0]}']
@@ -240,6 +244,16 @@ class Calculator:
 
     # -------------решения задания 2-------------------------
     def solveB2(self, data: list[float], interval_number: int) -> PrettyTable:
+        """
+        Решить задачу В2
+        получить интервальный ряда чатот и интервальный ряд
+        относительных частот.
+        Построить гистрограммы для полученных частот
+        :param data: статистические данные
+        :param interval_number: количество интервалов
+        :return: интервальный ряд чатот и интервальный ряд
+        относительных частот
+        """
         assert interval_number > 0, "Невозмножно построить интервалы"
 
         var = self.solveB1(data)
@@ -264,6 +278,15 @@ class Calculator:
         return table
 
     def solveC2(self, data: list[float], interval_number: int) -> PrettyTable:
+        """
+        Построить группированный ряд распределения частот
+        и группированный ряд распрееделение относительных частот.
+        Построить соответствующие полигоны.
+        :param data: статистические данные
+        :param interval_number: оличество интервалов
+        :return: Групированный ряд распределения частот
+        и относительных частот
+        """
         middle = [(i[0] + i[1]) / 2 for i in self.get_intervals(data, interval_number)]
         # Получение группированного ряда распределения
         freq = self.get_intervals_frequencies(data, interval_number)
@@ -294,8 +317,17 @@ class Calculator:
 
 
 if __name__ == "__main__":
-
-    data = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]
-
-    print(Calculator().solveC2(data, 10))
-    plt.show()
+    # data = [1, 1, 5, 3, 7, 1, 3]
+    # interval_number = 5
+    # var = Calculator().solveB1(data)
+    # mx = max(var)
+    # mn = min(var)
+    # step = (mx - mn) / interval_number
+    # intervals = []
+    # x = mn
+    # while x + step <= mx:
+    #     intervals.append([x, x := x + step])
+    #
+    # if int(intervals[-1][1]) != int(mx):
+    #     intervals.append([x, x := x + step])
+    pass
