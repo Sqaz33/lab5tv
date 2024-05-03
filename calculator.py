@@ -121,7 +121,7 @@ class Calculator:
                 rel_freq[-1] += var_rel_freq[i]
         return rel_freq
     
-    # -------------решения задач-------------------------
+    # -------------решения задания 1-------------------------
     def solveB1(self, data: list[float]) -> list[float]:
         """
         Решить задачу B1:
@@ -130,30 +130,6 @@ class Calculator:
         :return: вариацонный ряд
         """
         return list(sorted(set(data)))
-
-    def solveB2(self, data: list[float], interval_number: int) -> PrettyTable:
-        assert interval_number > 0, "Невозмножно построить интервалы"
-        
-        var = self.solveB1(data)
-        
-        # Получение интервалов
-        intervals = self.get_intervals(data, interval_number)
-        
-        # Получение интервального ряда частот и относ. частот
-        freq = self.get_intervals_frequencies(data, interval_number)
-        rel_freq = self.get_intervals_relative_frequencies(data, interval_number)
-
-        # Построение таблицы
-        table = PrettyTable()
-        table.add_column("Номер интервала - i", [i for i in range(1, interval_number+1)])
-        table.add_column("Частичный интервал", [f'{i[0]:0.3f}-{i[1]:0.3f}' for i in intervals])
-        table.add_column("Сумма частот интервала", freq)
-        table.add_column("Сумма относительных частот интервала", [f'{i:0.3f}' for i in rel_freq])
-
-        # Построение гистрограмм
-        plt.hist(data, bins=interval_number, color='skyblue', edgecolor='black')
-        plt.title("Гистограмма")
-        return table
 
     def solveC1(self, data: list[float]) -> tuple[PrettyTable, PrettyTable]:
         """
@@ -188,29 +164,6 @@ class Calculator:
         relative_freq_table.add_column("Wi", [f'{i:.3f}' for i in relative_freq])
 
         return freq_table, relative_freq_table
-
-    def solveC2(self, data: list[float], interval_number: int) -> PrettyTable:
-        middle = [(i[0]+i[1]) / 2 for i in self.get_intervals(data, interval_number)]
-        # Получение группированного ряда распределения 
-        freq = self.get_intervals_frequencies(data, interval_number)
-        relative_freq = self.get_intervals_relative_frequencies(data, interval_number)
-        
-        table = PrettyTable()
-        table.add_column("Середина интервала", [f'{i:0.3f}' for i in middle])
-        table.add_column("Частоты", freq)
-        table.add_column("Относительных частоты", [f'{i:0.3f}' for i in relative_freq])
-
-        # Построение полигонов
-        fig1, pol1 = plt.subplots()
-        fig1, pol2 = plt.subplots()
-
-        pol1.plot(middle, freq)
-        pol1.set_title("Полигон частот")
-
-        pol2.plot(middle, relative_freq)
-        pol2.set_title("Полигон относительных частот")
-
-        return table
 
     def solveD1(self, data: list[float]) -> tuple[str, list[str]]:
         """
@@ -263,9 +216,6 @@ class Calculator:
 
         return func_definition, str_Fx
 
-    def solveD2(self):
-        pass
-
     def solveE1(self, data: list[float]) -> tuple[str, float, str, float, str, float, str, float]:
         """
         Решить задачу E1:
@@ -288,8 +238,60 @@ class Calculator:
             self.unbiased_assessment(X, N)
         )
 
+    # -------------решения задания 2-------------------------
+    def solveB2(self, data: list[float], interval_number: int) -> PrettyTable:
+        assert interval_number > 0, "Невозмножно построить интервалы"
+
+        var = self.solveB1(data)
+
+        # Получение интервалов
+        intervals = self.get_intervals(data, interval_number)
+
+        # Получение интервального ряда частот и относ. частот
+        freq = self.get_intervals_frequencies(data, interval_number)
+        rel_freq = self.get_intervals_relative_frequencies(data, interval_number)
+
+        # Построение таблицы
+        table = PrettyTable()
+        table.add_column("Номер интервала - i", [i for i in range(1, interval_number + 1)])
+        table.add_column("Частичный интервал", [f'{i[0]:0.3f}-{i[1]:0.3f}' for i in intervals])
+        table.add_column("Сумма частот интервала", freq)
+        table.add_column("Сумма относительных частот интервала", [f'{i:0.3f}' for i in rel_freq])
+
+        # Построение гистрограмм
+        plt.hist(data, bins=interval_number, color='skyblue', edgecolor='black')
+        plt.title("Гистограмма")
+        return table
+
+    def solveC2(self, data: list[float], interval_number: int) -> PrettyTable:
+        middle = [(i[0] + i[1]) / 2 for i in self.get_intervals(data, interval_number)]
+        # Получение группированного ряда распределения
+        freq = self.get_intervals_frequencies(data, interval_number)
+        relative_freq = self.get_intervals_relative_frequencies(data, interval_number)
+
+        table = PrettyTable()
+        table.add_column("Середина интервала", [f'{i:0.3f}' for i in middle])
+        table.add_column("Частоты", freq)
+        table.add_column("Относительных частоты", [f'{i:0.3f}' for i in relative_freq])
+
+        # Построение полигонов
+        fig1, pol1 = plt.subplots()
+        fig1, pol2 = plt.subplots()
+
+        pol1.plot(middle, freq)
+        pol1.set_title("Полигон частот")
+
+        pol2.plot(middle, relative_freq)
+        pol2.set_title("Полигон относительных частот")
+
+        return table
+
+    def solveD2(self):
+        pass
+
     def solveE2(self):
         pass
+
 
 
 if __name__ == "__main__":
