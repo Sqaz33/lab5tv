@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 from math import ceil
+from math import isclose
 
 
 class Calculator:
@@ -121,9 +122,7 @@ class Calculator:
             for j in range(len(var)):
                 if intervals[i][0] <= var[j] < intervals[i][1]:
                     rel_freq[i] += var_rel_freq[j]
-        for i in range(len(var)):
-            if var[i] == intervals[-1][1]:
-                rel_freq[-1] += var_rel_freq[i]
+        rel_freq[-1] += var_rel_freq[var.index(max(var))]
         return rel_freq
 
     def sublot_empirical_distribution_func(self, data: list[float], relative_frequencies: list[float], titel: str):
@@ -343,6 +342,13 @@ class Calculator:
         # получение эмпирической ф-ции распределения для интервального ряда
         p = 0
         Fx = [p := p + i for i in P]
+        # получаем строковое представленние функции для интер. ряда
+        str_intervals = ([f'x <= {intervals[0][0]:.3f}'] 
+                         + [f'{i[0]} < x <= {i[1]:.3f}' for i in intervals] 
+                         + [f'x > {intervals[-1][1]:.3f}'])
+        Fx1 = [0] + Fx + [1]
+        str_interv_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip([f'{p:0.3f}' for p in Fx1], str_intervals)]
+
 
         # построение графика ф-ции для инт. ряда
         X_axis = [intervals[0][0]] + [i[1] for i in intervals]
@@ -350,15 +356,27 @@ class Calculator:
         fig1, intervals_graph = plt.subplots()
         intervals_graph.plot(X_axis, Y_axis)
         intervals_graph.set_title("График эмпирической функции для интервального ряда")
-        
-        # построение графика ф-ции для груп. ряда
+
+        # получение эмпирической ф-ции распределения для груп. ряда
             # получение груп. ряда
         mid = [(i[0] + i[1]) / 2 for i in intervals]
+            # получение функции груп. ряда
+        intervals = [(mid[0] - 1, mid[0])]
+        for i in range(0, len(mid) - 1):
+            intervals.append((mid[i], mid[i + 1]))
+        intervals += [(mid[-1], mid[-1] + 1)]
+             # получаем строковое представленние функции груп. ряда
+        str_intervals = ([f'x <= {mid[0]:.3f}']
+                         + [f'{i[0]:.3f} < x <= {i[1]:.3f}' for i in intervals[1:-1]]
+                         + [f'x > {mid[-1]:.3f}'])
+        str_grup_Fx = [f'если {xs} то F*(x) = {p}' for p, xs in zip([f'{p:0.3f}' for p in Fx1], str_intervals)]
+
+
+        # построение графика ф-ции для груп.. ряда
         self.sublot_empirical_distribution_func(mid, P, "Империческая функция распределения для группированного ряда")
 
+        return str_interv_Fx , str_grup_Fx
 
-        return None
-    
     def solveE2(self, data: list[float], interval_number: int) -> tuple[str, float, str, float, str, float, str, float]:
         """
         Решить задачу E2:
@@ -388,6 +406,8 @@ class Calculator:
 
 if __name__ == "__main__":
     data = [1, 1, 5, 3, 7, 1, 3]
-    for s in Calculator().solveE2(data, 3):
-        print(s)
+    for a in Calculator().solveD2(data, 10):
+        print("-" * 40)
+        for s in a:
+            print(s)
     # plt.show()
