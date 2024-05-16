@@ -65,7 +65,7 @@ if __name__ == "__main__":
     calc = Calculator()
     data = None
     while True:
-        com = input("Введите команду\n")
+        com = input("Введите help, чтобы узнать полный список команд для работы \n")
         com = com.replace(' ', '')
         command = Commands(com) if com_contains_str_com(com) else None
 
