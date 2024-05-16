@@ -49,11 +49,12 @@ def check_data(data: list[...]) -> bool:
     return True
 
 
-# if __name__ == "__main__":
-#     ## ошибка точности
-#     data = [1, 2, 3, 4]  # test data
-#     calc = Calculator()
-#     calc.solveB2(data, 10)
+if __name__ == "__main__":
+    pass
+    ## ошибка точности
+    data = [1, 2, 3, 4]  # test data
+    calc = Calculator()
+    calc.solveB2(data, 10)
 
 if __name__ == "__main__":
     print("------------------------------------------\n"
@@ -61,11 +62,12 @@ if __name__ == "__main__":
           "Разработчики: Рыжков М.М, Матвеев С.А.\n"
           "Группа: ПрИн-268.\n"
           "Волгоград 2024.\n"
-          "-----------------------------------------")
+          "-----------------------------------------\n"
+          "Введите help, чтобы узнать полный список команд для работы\n")
     calc = Calculator()
     data = None
     while True:
-        com = input("Введите help, чтобы узнать полный список команд для работы \n")
+        com = input("Введите команду\n")
         com = com.replace(' ', '')
         command = Commands(com) if com_contains_str_com(com) else None
 
@@ -113,6 +115,27 @@ if __name__ == "__main__":
                     print(calc.solveC2(data, intervals))
                     print("----------------------")
                     plt.show()
+            case Commands.D2:
+                if check_data(data):
+                    print("______решение D2______")
+                    intervals = int(input("Введите количество интервалов.\n"))
+                    assert intervals > 0, "Количество интервалов должно быть > 0."
+                    res = calc.solveD2(data, intervals)
+                    print("__Эмпирическая функция распределения для интервального ряда__")
+                    for s in res[0]:
+                        print(s)
+                    print("----------------------")
+                    print("Эмпирическая функция распределения для группированного ряда")
+                    for s in res[1]:
+                        print(s)
+                    print("----------------------")
+                    plt.show()
+            case Commands.E2:
+                if check_data(data):
+                    print("______решение E2______")
+                    for i in calc.solveE2(data):
+                        print(i)
+                    print("----------------------")
             case Commands.FROM_FILE:
                 path = input("Введите путь до файла.\n")
                 try:
