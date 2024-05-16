@@ -126,6 +126,36 @@ class Calculator:
                 rel_freq[-1] += var_rel_freq[i]
         return rel_freq
 
+    def sublot_empirical_distribution_func(self, data: list[float], relative_frequencies: list[float], titel: str):
+        # получение ф-ции распр.
+        X = data
+        P = relative_frequencies
+        p = 0
+        Fx = [0] + [p := p + i for i in P]
+
+        # получение интервалов, для значения ф-ции распр.
+        intervals = [(X[0] - 1, X[0])]
+        for i in range(0, len(X) - 1):
+            intervals.append((X[i], X[i + 1]))
+        intervals += [(X[-1], X[-1] + 1)]
+
+        # построение графика
+        fig, graph = plt.subplots()
+        graph.set_xlim(intervals[0][0], intervals[-1][1])
+        graph.set_ylim(0, 1.1)
+        graph.set_title(titel)
+        # добавление стрелок     (xy)<------------(xytext)
+        for i in range(len(Fx)):
+            graph.annotate(
+                '', xy=(intervals[i][0], Fx[i]), xytext=(intervals[i][1], Fx[i]),
+                arrowprops=dict(width=0.01, headwidth=5)
+            )
+            # добавление пунктира
+        for i in range(len(Fx) - 1):
+            graph.plot(
+                [intervals[i][1], intervals[i][1]], [0, Fx[i + 1]], linestyle="--", color="black"
+            )
+
     # -------------решения задания 1-------------------------
     def solveB1(self, data: list[float]) -> list[float]:
         """
@@ -191,28 +221,13 @@ class Calculator:
         p = 0
         Fx = [0] + [p := p + i for i in P]
 
+        self.sublot_empirical_distribution_func(X, P, "Империческая функция распределения")
+
         # получение интервалов, для значения ф-ции распр.
         intervals = [(X[0] - 1, X[0])]
         for i in range(0, len(X) - 1):
             intervals.append((X[i], X[i + 1]))
         intervals += [(X[-1], X[-1] + 1)]
-
-        # построение графика
-        plt.xlim(intervals[0][0], intervals[-1][1])
-        plt.ylim(0, 1.1)
-        plt.title("Империческая функция распределения")
-        # добавление стрелок     (xy)<------------(xytext)
-        for i in range(len(Fx)):
-            plt.annotate(
-                '', xy=(intervals[i][0], Fx[i]), xytext=(intervals[i][1], Fx[i]),
-                arrowprops=dict(width=0.01, headwidth=5)
-            )
-            # добавление пунктира
-        for i in range(len(Fx) - 1):
-            plt.plot(
-                [intervals[i][1], intervals[i][1]], [Fx[i], Fx[i + 1]], linestyle="--", color="black"
-            )
-
         # получаем строковое представленние функции
         str_intervals = ([f'x <= {X[0]}']
                          + [f'{i[0]} < x <= {i[1]}' for i in intervals[1:-1]]
@@ -324,70 +339,55 @@ class Calculator:
 
         P = self.get_intervals_relative_frequencies(data, interval_number)
         intervals = self.get_intervals(data, interval_number)
+        
+        # получение эмпирической ф-ции распределения для интервального ряда
         p = 0
-        Fx = [0] + [p := p + i for i in P]
-
-        # получение груп. ряда
-        mid = [(i[0] + i[1]) / 2 for i in intervals]
-
-        # построение графиков
-        fig1, Fx_interv_graph = plt.subplots()
-        fig2, Fx_mid_graph = plt.subplots()
+        Fx = [p := p + i for i in P]
 
         # построение графика ф-ции для инт. ряда
         X_axis = [intervals[0][0]] + [i[1] for i in intervals]
-        Fx_interv_graph.plot(X_axis, Fx)
-        Fx_interv_graph.set_title("Функция распределения для интервального ряда")
+        Y_axis = [0] + Fx
+        fig1, intervals_graph = plt.subplots()
+        intervals_graph.plot(X_axis, Y_axis)
+        intervals_graph.set_title("График эмпирической функции для интервального ряда")
+        
+        # построение графика ф-ции для груп. ряда
+            # получение груп. ряда
+        mid = [(i[0] + i[1]) / 2 for i in intervals]
+        self.sublot_empirical_distribution_func(mid, P, "Империческая функция распределения для группированного ряда")
 
-        # TODO: сделать график как для инт. ряда
-        #построение графика ф-ции для группированного ряда
-        mid_by_inter = [(mid[0] - 1, mid[0])]
-        for i in range(0, len(mid) - 1):
-            mid_by_inter.append((mid[i], mid[i + 1]))
-        mid_by_inter += [(mid[-1], mid[-1] + 1)]
-        Fx_mid_graph.set_xlim(mid_by_inter[0][0], mid_by_inter[-1][1])
-        Fx_mid_graph.set_ylim(0, 1.1)
-        Fx_mid_graph.set_title("Функция распределения для групированного ряда")
-            # добавление стрелок     (xy)<------------(xytext)
-        for i in range(len(Fx)):
-            Fx_mid_graph.annotate(
-                '', xy=(mid_by_inter[i][0], Fx[i]), xytext=(mid_by_inter[i][1], Fx[i]),
-                arrowprops=dict(width=0.01, headwidth=5)
-            )
-            # добавление пунктира
-        for i in range(len(Fx) - 1):
-            Fx_mid_graph.plot(ё
-                [mid_by_inter[i][1], mid_by_inter[i][1]], [Fx[i], Fx[i + 1]], linestyle="--", color="black"
-            )
 
-        #TODO: починить строковое представление функция
-        # получаем строковое представленние функции для инт. ряда
-        str_interv = [f'x < ']
-        str_interv += [f'x ∈ [{i[0]}, {i[1]})' for i in intervals[0:-1]]
-        str_interv.append(f'x ∈ ({intervals[-1][0]}, {intervals[-1][1]}]')
-        Fx = list(map(lambda s: f'{s:0.3f}', Fx))
-        str_Fx_interv = [f'если {i} то F*(x) = {p}' for p, i in zip(Fx, str_interv)]
+        return None
+    
+    def solveE2(self, data: list[float], interval_number: int) -> tuple[str, float, str, float, str, float, str, float]:
+        """
+        Решить задачу E2:
+        Дать определение функции распределения;
+        Найти функции распределений
+        для интервального и группированного рядов;
+        Построить график для функциий.
+        :param data: статистические данные
+        :param interval_number: количество интервалов
+        :return: функции распределения
+        """
 
-        # получаем строковое представленние функции для груп. ряда
-        str_mid_intervals = ([f'x <= {mid_by_inter[0][0]}']
-                            + [f'{i[0]} < x <= {i[1]}' for i in mid_by_inter[1:-1]]
-                            + [f'x > {mid_by_inter[-1][1]}'])
-        str_Fx_mid = [f'если {xs} то F*(x) = {p}' for p, xs in zip(Fx, str_mid_intervals)]
-
-        return str_Fx_interv, str_Fx_mid
-
-    def solveE2(self):
-        pass
+        intervals = self.get_intervals(data, interval_number)
+        X = [(i[0] + i[1]) / 2 for i in intervals]
+        N = self.get_intervals_frequencies(data, interval_number)
+        return (
+            self._sample_mean,
+            self.sample_mean(X, N),
+            self._dispersion,
+            self.dispersion(X, N),
+            self._standard_deviation,
+            self.standard_deviation(X, N),
+            self._unbiased_assessment,
+            self.unbiased_assessment(X, N)
+        )
 
 
 if __name__ == "__main__":
     data = [1, 1, 5, 3, 7, 1, 3]
-    interval_number = 5
-    calc = Calculator()
-    ans = calc.solveD2(data, interval_number)
-    for j in ans:
-        print("------------------------")
-        for i in j:
-            print(i)
-
-    plt.show()
+    for s in Calculator().solveE2(data, 3):
+        print(s)
+    # plt.show()
