@@ -32,12 +32,12 @@ def com_contains_str_com(com: str) -> bool:
 def get_data_from_file(path: str) -> list[...]:
     with open(path, 'r') as file:
         str_data = file.read().replace(' ', '').replace('\n', '')
-        return [int(n) for n in str_data.split(',')]
+        return [float(n) for n in str_data.split(';')]
 
 
 def write_data_to_file(data: list[...]) -> str:
     with open("gen_data.txt", 'w') as file:
-        file.write(', '.join(map(str, data)))
+        file.write('; '.join(map(str, data)))
     path = os.path.abspath(sys.argv[0])
     return path[0: path.rfind('\\')]
 
@@ -51,10 +51,6 @@ def check_data(data: list[...]) -> bool:
 
 if __name__ == "__main__":
     pass
-    ## ошибка точности
-    data = [1, 2, 3, 4]  # test data
-    calc = Calculator()
-    calc.solveB2(data, 10)
 
 if __name__ == "__main__":
     print("------------------------------------------\n"
@@ -145,8 +141,9 @@ if __name__ == "__main__":
                     data = None
             case Commands.FROM_K:
                 str_data = input("Введите статистические данные.\n")
-                str_data = str_data.replace(' ', '').split(',')
-                data = list(map(int, str_data))
+                str_data = str_data.replace(' ', '').split(';')
+                str_data = [n.replace(',', '.') for n in str_data]
+                data = list(map(float, str_data))
             case Commands.DATA:
                 if check_data(data):
                     print(data)
