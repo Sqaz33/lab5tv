@@ -19,7 +19,7 @@ class Calculator:
         b = (D_в)^(0.5)
         """
         self._unbiased_assessment = """
-        S = n/(n - 1) * D_в        
+        S = (n/(n - 1) * D_в)^(0.5)        
         """
 
     # ------------математичесие методы---------------
@@ -83,7 +83,7 @@ class Calculator:
         :return: несмещенная оценка
         """
         n = sum(frequencies)
-        return n / (n - 1) * self.dispersion(variation_series, frequencies)
+        return (n / (n - 1) * self.dispersion(variation_series, frequencies))**0.5
 
     def get_intervals(self, data: list[float], interval_number: int) -> list[list[int]]:
         var = self.solveB1(data)
@@ -94,8 +94,8 @@ class Calculator:
         x = mn
         while x + step <= mx:
             intervals.append([x, x := x + step])
-        if ceil(intervals[-1][1]) != ceil(mx):
-            intervals.append([x, x := x + step])
+        if not isclose(mx, intervals[-1][1], rel_tol=1e-9):
+            intervals.append([mx - step, mx])
         return intervals
 
     def get_intervals_frequencies(self, data: list[float], interval_number: int) -> list[int]:
@@ -220,7 +220,7 @@ class Calculator:
         p = 0
         Fx = [0] + [p := p + i for i in P]
 
-        self.sublot_empirical_distribution_func(X, P, "Империческая функция распределения")
+        self.sublot_empirical_distribution_func(X, P, "Эмпирическая функция распределения")
 
         # получение интервалов, для значения ф-ции распр.
         intervals = [(X[0] - 1, X[0])]
@@ -258,7 +258,7 @@ class Calculator:
         )
 
     # -------------решения задания 2-------------------------
-    def solveB2(self, data: list[float], interval_number: int) -> PrettyTable:
+    def solveB2(self, intervals: list[list[int]], freq: list[int], rel_freq: list[float]) -> PrettyTable:
         """
         Решить задачу В2
         получить интервальный ряда чатот и интервальный ряд
@@ -269,18 +269,8 @@ class Calculator:
         :return: интервальный ряд чатот и интервальный ряд
         относительных частот
         """
-        assert interval_number > 0, "Невозмножно построить интервалы"
-
-        var = self.solveB1(data)
-
-        # Получение интервалов
-        intervals = self.get_intervals(data, interval_number)
-
-        # Получение интервального ряда частот и относ. частот
-        freq = self.get_intervals_frequencies(data, interval_number)
-        rel_freq = self.get_intervals_relative_frequencies(data, interval_number)
-
         # Построение таблицы
+        interval_number = len(intervals)
         table = PrettyTable()
         table.add_column("Номер интервала - i", [i for i in range(1, interval_number + 1)])
         table.add_column("Частичный интервал", [f'{i[0]:0.3f}-{i[1]:0.3f}' for i in intervals])
@@ -288,11 +278,11 @@ class Calculator:
         table.add_column("Сумма относительных частот интервала", [f'{i:0.3f}' for i in rel_freq])
 
         # Построение гистрограммы
-        plt.hist(data, bins=interval_number, color='skyblue', edgecolor='black')
-        plt.title("Гистограмма")
+        # plt.hist(data, bins=interval_number, color='skyblue', edgecolor='black')
+        # plt.title("Гистограмма")
         return table
 
-    def solveC2(self, data: list[float], interval_number: int) -> PrettyTable:
+    def solveC2(self, intervals: list[list[int]], freq: list[int], rel_freq: list[float]) -> PrettyTable:
         """
         Построить группированный ряд распределения частот
         и группированный ряд распрееделение относительных частот.
@@ -302,15 +292,13 @@ class Calculator:
         :return: Групированный ряд распределения частот
         и относительных частот
         """
-        middle = [(i[0] + i[1]) / 2 for i in self.get_intervals(data, interval_number)]
+        middle = [(i[0] + i[1]) / 2 for i in intervals]
         # Получение группированного ряда распределения
-        freq = self.get_intervals_frequencies(data, interval_number)
-        relative_freq = self.get_intervals_relative_frequencies(data, interval_number)
 
         table = PrettyTable()
         table.add_column("Середина интервала", [f'{i:0.3f}' for i in middle])
         table.add_column("Частоты", freq)
-        table.add_column("Относительных частоты", [f'{i:0.3f}' for i in relative_freq])
+        table.add_column("Относительных частоты", [f'{i:0.3f}' for i in rel_freq])
 
         # Построение полигонов
         fig1, pol1 = plt.subplots()
@@ -319,12 +307,12 @@ class Calculator:
         pol1.plot(middle, freq)
         pol1.set_title("Полигон частот")
 
-        pol2.plot(middle, relative_freq)
+        pol2.plot(middle, rel_freq)
         pol2.set_title("Полигон относительных частот")
 
         return table
 
-    def solveD2(self, data: list[float], interval_number: int) -> tuple[list[str], list[str]]:
+    def solveD2(self, intervals: list[list[int]], freq: list[int], rel_freq: list[float]) -> tuple[list[str], list[str]]:
         """
         Решить задачу D2:
         Дать определение функции распределения;
@@ -336,8 +324,7 @@ class Calculator:
         :return: функции распределения
         """
 
-        P = self.get_intervals_relative_frequencies(data, interval_number)
-        intervals = self.get_intervals(data, interval_number)
+        P = rel_freq
         
         # получение эмпирической ф-ции распределения для интервального ряда
         p = 0
@@ -373,11 +360,11 @@ class Calculator:
 
 
         # построение графика ф-ции для груп.. ряда
-        self.sublot_empirical_distribution_func(mid, P, "Империческая функция распределения для группированного ряда")
+        self.sublot_empirical_distribution_func(mid, P, "Эмпирическая функция распределения для группированного ряда")
 
         return str_interv_Fx , str_grup_Fx
 
-    def solveE2(self, data: list[float], interval_number: int) -> tuple[str, float, str, float, str, float, str, float]:
+    def solveE2(self, intervals: list[list[int]], freq: list[int]) -> tuple[str, float, str, float, str, float, str, float]:
         """
         Решить задачу E2:
         Дать определение функции распределения;
@@ -389,9 +376,8 @@ class Calculator:
         :return: функции распределения
         """
 
-        intervals = self.get_intervals(data, interval_number)
         X = [(i[0] + i[1]) / 2 for i in intervals]
-        N = self.get_intervals_frequencies(data, interval_number)
+        N = freq
         return (
             self._sample_mean,
             self.sample_mean(X, N),

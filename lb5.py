@@ -23,6 +23,8 @@ class Commands(Enum):
     EXIT = "exit"
     HELP = "help"
     GEN = "gen"
+    INTERV = "interv"
+    CLEAR_INTERV = "clear_interv"
 
 
 def com_contains_str_com(com: str) -> bool:
@@ -37,20 +39,23 @@ def get_data_from_file(path: str) -> list[...]:
 
 def write_data_to_file(data: list[...]) -> str:
     with open("gen_data.txt", 'w') as file:
-        file.write('; '.join(map(str, data)))
+        file.write('; '.join(map(data, data)))
     path = os.path.abspath(sys.argv[0])
     return path[0: path.rfind('\\')]
 
 
-def check_data(data: list[...]) -> bool:
-    if data is None:
+def check_data(data: list[...], interv_data: list[...]) -> bool:
+    if data is None and interv_data is None:
         print("Статистические данные не введены.")
         return False
     return True
 
 
 if __name__ == "__main__":
+    interv = "10;12 12;13 13;14"
     pass
+
+
 
 if __name__ == "__main__":
     print("------------------------------------------\n"
@@ -62,6 +67,7 @@ if __name__ == "__main__":
           "Введите help, чтобы узнать полный список команд для работы\n")
     calc = Calculator()
     data = None
+    interv_data: list[list[list[float]], list[int], list[float]] = None
     while True:
         com = input("Введите команду\n")
         com = com.replace(' ', '')
@@ -96,27 +102,51 @@ if __name__ == "__main__":
                         print(i)
                     print("----------------------")
             case Commands.B2:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение B2______")
-                    intervals = int(input("Введите количество интервалов.\n"))
-                    assert intervals > 0, "Количество интервалов должно быть > 0."
-                    print(calc.solveB2(data, intervals))
+                    if interv_data is None:
+                        interval_number = int(input("Введите количество интервалов.\n"))
+                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        intervals = Calculator().get_intervals(data, interval_number)
+                        freq = Calculator().get_intervals_frequencies(data, interval_number)
+                        rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
+                    else:
+                        intervals = interv_data[0]
+                        freq = interv_data[1]
+                        rel_freq = interv_data[2]
+                    print(calc.solveB2(intervals, freq, rel_freq))
                     print("----------------------")
                     plt.show()
             case Commands.C2:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение C2______")
-                    intervals = int(input("Введите количество интервалов.\n"))
-                    assert intervals > 0, "Количество интервалов должно быть > 0."
-                    print(calc.solveC2(data, intervals))
+                    if interv_data is None:
+                        interval_number = int(input("Введите количество интервалов.\n"))
+                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        intervals = Calculator().get_intervals(data, interval_number)
+                        freq = Calculator().get_intervals_frequencies(data, interval_number)
+                        rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
+                    else:
+                        intervals = interv_data[0]
+                        freq = interv_data[1]
+                        rel_freq = interv_data[2]
+                    print(calc.solveC2(intervals, freq, rel_freq))
                     print("----------------------")
                     plt.show()
             case Commands.D2:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение D2______")
-                    intervals = int(input("Введите количество интервалов.\n"))
-                    assert intervals > 0, "Количество интервалов должно быть > 0."
-                    res = calc.solveD2(data, intervals)
+                    if interv_data is None:
+                        interval_number = int(input("Введите количество интервалов.\n"))
+                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        intervals = Calculator().get_intervals(data, interval_number)
+                        freq = Calculator().get_intervals_frequencies(data, interval_number)
+                        rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
+                    else:
+                        intervals = interv_data[0]
+                        freq = interv_data[1]
+                        rel_freq = interv_data[2]
+                    res = calc.solveD2(intervals, freq, rel_freq)
                     print("__Эмпирическая функция распределения для интервального ряда__")
                     for s in res[0]:
                         print(s)
@@ -127,9 +157,19 @@ if __name__ == "__main__":
                     print("----------------------")
                     plt.show()
             case Commands.E2:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение E2______")
-                    for i in calc.solveE2(data):
+                    if interv_data is None:
+                        interval_number = int(input("Введите количество интервалов.\n"))
+                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        intervals = Calculator().get_intervals(data, interval_number)
+                        freq = Calculator().get_intervals_frequencies(data, interval_number)
+                        rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
+                    else:
+                        intervals = interv_data[0]
+                        freq = interv_data[1]
+                        rel_freq = interv_data[2]
+                    for i in calc.solveE2(intervals, freq):
                         print(i)
                     print("----------------------")
             case Commands.FROM_FILE:
@@ -170,7 +210,21 @@ if __name__ == "__main__":
                 gen_data = Generator.generate_list_of_number(
                     80, values=(-100, 100), freq=(10, 20)
                 )
-                print(f"Файл случайных чиселв сгенерирован в папке {write_data_to_file(gen_data)}")
+                print(f"Файл случайных чиселв сгенерирован в папке {write_data_to_file(gen_data)}.")
+            case Commands.INTERV:
+                str_interv = input("Введите интервалы.\n")
+                str_freq = input("Введите частоты.\n")
+
+                interv = str_interv.split(' ')
+                interv = [s.split(';') for s in interv]
+                interv = list(map(lambda i:[float(i[0]), float(i[1])], interv))
+
+                freq = list(map(int, str_freq.split(' ')))
+                rel_freq = [n / sum(freq) for n in freq]
+                interv_data = [interv, freq, rel_freq]
+            case Commands.CLEAR_INTERV:
+                interv_data = None
+
             case Commands.EXIT:
                 print("Программа прекращает работу.")
                 break

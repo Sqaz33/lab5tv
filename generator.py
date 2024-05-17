@@ -15,17 +15,18 @@ class Generator:
             values: tuple[int, int],
             freq: tuple[int, int]
     ) -> list[...]:
+        #TODO: переделать 
+
         # составить вар. ряд с частотами
         # оч медленное решение при малом количестве вариантов------------------
         rands = dict()
         sum_freq = 0
-        while sum_freq < amount_of_numbers:
+        while len(rands.keys()):
             rand_val = random.randint(values[0], values[1])
-            rand_freq = random.randint(freq[0], freq[1])
-            if rands.get(rand_val, "not") == "not":
-                rands[rand_val] = rand_freq
-                sum_freq += rand_freq
+            rands[rand_val] = 0
         #------------------------------------------
+        for r in rands.keys():
+            rands[r] = random.ra
 
         # подбить сумму частот до треб. кол. чисел
         while sum_freq != amount_of_numbers:
