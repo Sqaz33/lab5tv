@@ -186,9 +186,9 @@ if __name__ == "__main__":
                 data = list(map(float, str_data))
             case Commands.DATA:
                 if check_data(data, interv_data):
-                    if not data is NULL:
+                    if not data is None:
                         print(data)
-                    if not interv_data is NULL:
+                    if not interv_data is None:
                         print(interv_data)
             case Commands.HELP:
                 print(
