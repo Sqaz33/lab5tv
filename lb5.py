@@ -185,8 +185,11 @@ if __name__ == "__main__":
                 str_data = [n.replace(',', '.') for n in str_data]
                 data = list(map(float, str_data))
             case Commands.DATA:
-                if check_data(data):
-                    print(data)
+                if check_data(data, interv_data):
+                    if not data is NULL:
+                        print(data)
+                    if not interv_data is NULL:
+                        print(interv_data)
             case Commands.HELP:
                 print(
                     "Список команд:\n"
