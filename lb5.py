@@ -72,7 +72,6 @@ if __name__ == "__main__":
         com = input("Введите команду\n")
         com = com.replace(' ', '')
         command = Commands(com) if com_contains_str_com(com) else None
-
         match command:
             case Commands.B1:
                 if check_data(data, interv_data):
@@ -106,7 +105,7 @@ if __name__ == "__main__":
                     print("______решение B2______")
                     if interv_data is None:
                         interval_number = int(input("Введите количество интервалов.\n"))
-                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        assert interval_number > 0, "Количество интервалов должно быть > 0."
                         intervals = Calculator().get_intervals(data, interval_number)
                         freq = Calculator().get_intervals_frequencies(data, interval_number)
                         rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
@@ -122,7 +121,7 @@ if __name__ == "__main__":
                     print("______решение C2______")
                     if interv_data is None:
                         interval_number = int(input("Введите количество интервалов.\n"))
-                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        assert interval_number > 0, "Количество интервалов должно быть > 0."
                         intervals = Calculator().get_intervals(data, interval_number)
                         freq = Calculator().get_intervals_frequencies(data, interval_number)
                         rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
@@ -138,7 +137,7 @@ if __name__ == "__main__":
                     print("______решение D2______")
                     if interv_data is None:
                         interval_number = int(input("Введите количество интервалов.\n"))
-                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        assert interval_number > 0, "Количество интервалов должно быть > 0."
                         intervals = Calculator().get_intervals(data, interval_number)
                         freq = Calculator().get_intervals_frequencies(data, interval_number)
                         rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
@@ -161,7 +160,7 @@ if __name__ == "__main__":
                     print("______решение E2______")
                     if interv_data is None:
                         interval_number = int(input("Введите количество интервалов.\n"))
-                        assert intervals > 0, "Количество интервалов должно быть > 0."
+                        assert interval_number > 0, "Количество интервалов должно быть > 0."
                         intervals = Calculator().get_intervals(data, interval_number)
                         freq = Calculator().get_intervals_frequencies(data, interval_number)
                         rel_freq = Calculator().get_intervals_relative_frequencies(data, interval_number)
