@@ -1,50 +1,40 @@
 import random
 
-
 class Generator:
-    """
-        3. Составить файл из статистических данных, содержащий от 50 до 80
-        целых чисел, среди которых количество различных вариантов должно
-        быть не менее 10 и не более 20 (числа могут быть как одного, так и разных
-        знаков).
-    """
 
     @staticmethod
     def generate_list_of_number(
             amount_of_numbers: int,
             values: tuple[int, int],
-            freq: tuple[int, int]
+            freq: tuple[int, int],
     ) -> list[...]:
-        #TODO: переделать 
+        # получить список чисел длинной amount_of_numbers 
+        # частота каждого числа от freq[0] до freq[1] включительно
+        # числа содержаться в диапазоне от values[0] до values[1] включительно
+        assert freq[0] * (values[1] - values[0] + 1) >= amount_of_numbers, "Sum of freqs less, then amount_of_number"
+        rnd = dict()
+        while amount_of_numbers > 0:
+            r = random.randint(values[0], values[1])
+            if r not in rnd.keys():
+                fr = random.randint(freq[0], freq[1]);
+                if (freq[1] > amount_of_numbers):
+                    fr = amount_of_numbers
+                amount_of_numbers -= fr
+                rnd[r] = fr
+        
+        series = []
+        for k in rnd.keys():
+            series += [k] * rnd[k]
+        random.shuffle(series)
+        
+        return series 
 
-        # составить вар. ряд с частотами
-        # оч медленное решение при малом количестве вариантов------------------
-        rands = dict()
-        sum_freq = 0
-        while len(rands.keys()):
-            rand_val = random.randint(values[0], values[1])
-            rands[rand_val] = 0
-        #------------------------------------------
-        for r in rands.keys():
-            rands[r] = random.ra
 
-        # подбить сумму частот до треб. кол. чисел
-        while sum_freq != amount_of_numbers:
-            for n in rands.keys():
-                if sum_freq == amount_of_numbers:
-                    break
-                if rands[n] >= freq[0] + 1:
-                    rands[n] -= 1
-                    sum_freq -= 1
-
-        # составить список случайных чисел
-        stats = []
-        for n in rands.keys():
-            stats += [n] * rands[n]
-        random.shuffle(stats)
-
-        return stats
 
 
 if __name__ == "__main__":
-    Generator.generate_list_of_number(100, (-10, 10), (10, 20))
+    res = Generator.generate_list_of_number(1000, (-100, 100), (10, 20))
+    for n in res:
+        if res.count(n) < 10:
+            print("huinya")
+    print(len(res))

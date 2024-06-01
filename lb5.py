@@ -39,7 +39,7 @@ def get_data_from_file(path: str) -> list[...]:
 
 def write_data_to_file(data: list[...]) -> str:
     with open("gen_data.txt", 'w') as file:
-        file.write('; '.join(map(data, data)))
+        file.write('; '.join(map(str, data)))
     path = os.path.abspath(sys.argv[0])
     return path[0: path.rfind('\\')]
 
@@ -75,19 +75,19 @@ if __name__ == "__main__":
 
         match command:
             case Commands.B1:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение B1______")
                     print(calc.solveB1(data))
                     print("----------------------")
             case Commands.C1:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение C1______")
                     for t in calc.solveC1(data):
                         print(t)
                     print("----------------------")
                     plt.show()
             case Commands.D1:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение D1______")
                     ans = calc.solveD1(data)
                     print(ans[0])
@@ -96,7 +96,7 @@ if __name__ == "__main__":
                     print("----------------------")
                     plt.show()
             case Commands.E1:
-                if check_data(data):
+                if check_data(data, interv_data):
                     print("______решение E1______")
                     for i in calc.solveE1(data):
                         print(i)
@@ -213,7 +213,7 @@ if __name__ == "__main__":
                 gen_data = Generator.generate_list_of_number(
                     80, values=(-100, 100), freq=(10, 20)
                 )
-                print(f"Файл случайных чиселв сгенерирован в папке {write_data_to_file(gen_data)}.")
+                print(f"Файл случайных чисел сгенерирован в папке {write_data_to_file(gen_data)}.")
             case Commands.INTERV:
                 str_interv = input("Введите интервалы.\n")
                 str_freq = input("Введите частоты.\n")
